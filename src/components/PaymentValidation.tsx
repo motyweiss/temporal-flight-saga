@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { CreditCard, Clock, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import { PAYMENT_VALIDATION_TIMEOUT, MAX_PAYMENT_RETRIES, PAYMENT_FAILURE_RATE, PAYMENT_CODE_LENGTH, ORDER_ID_PREFIX, ORDER_ID_LENGTH } from "@/constants/booking";
 
 interface PaymentValidationProps {
@@ -79,14 +80,66 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
         <p className="text-muted-foreground text-lg">Enter your {PAYMENT_CODE_LENGTH}-digit payment code to complete your booking</p>
       </div>
 
-      {timeRemaining !== null && <Card className="border-2 border-warning/50 shadow-lg animate-scale-in"><CardContent className="p-6"><div className="space-y-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Clock className="w-6 h-6 text-warning animate-pulse" /><div><div className="font-bold text-lg">Validation Timer</div><div className="text-sm text-muted-foreground">Payment must be validated in time</div></div></div><div className="text-5xl font-bold text-warning tabular-nums">{timeRemaining}s</div></div><Progress value={progress} className="h-2" /></div></CardContent></Card>}
+      {timeRemaining !== null && (
+        <Card className="border-2 border-primary/50 shadow-lg animate-scale-in">
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Clock className="w-6 h-6 text-primary animate-pulse" />
+                  <div>
+                    <div className="font-bold text-lg">Validation Timer</div>
+                    <div className="text-sm text-muted-foreground">Payment must be validated in time</div>
+                  </div>
+                </div>
+                <div className="text-5xl font-bold text-primary tabular-nums">{timeRemaining}s</div>
+              </div>
+              <Progress value={progress} className="h-2" />
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card className="shadow-lg animate-slide-up" style={{ animationDelay: '0.1s' }}>
-        <CardHeader className="text-center"><CardTitle className="flex items-center justify-center gap-2 text-2xl"><CreditCard className="w-6 h-6 text-primary" />Payment Code</CardTitle><CardDescription>Enter the {PAYMENT_CODE_LENGTH}-digit code you received</CardDescription></CardHeader>
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center justify-center gap-2 text-2xl">
+            <CreditCard className="w-6 h-6 text-primary" />
+            Payment Code
+          </CardTitle>
+          <CardDescription>Enter the {PAYMENT_CODE_LENGTH}-digit code you received</CardDescription>
+        </CardHeader>
         <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Input type="text" value={paymentCode} onChange={(e) => setPaymentCode(e.target.value.replace(/\D/g, "").slice(0, PAYMENT_CODE_LENGTH))} placeholder="● ● ● ● ●" className="text-center text-4xl font-mono tracking-[1em] h-20 border-2 focus:border-primary transition-colors" maxLength={PAYMENT_CODE_LENGTH} disabled={isValidating} dir="ltr" />
-            <div className="flex justify-center gap-2">{[...Array(PAYMENT_CODE_LENGTH)].map((_, i) => <div key={i} className={`w-3 h-3 rounded-full transition-colors ${i < paymentCode.length ? "bg-primary" : "bg-border"}`} />)}</div>
+          <div className="flex flex-col items-center space-y-4">
+            <InputOTP
+              maxLength={PAYMENT_CODE_LENGTH}
+              value={paymentCode}
+              onChange={(value) => setPaymentCode(value)}
+              disabled={isValidating}
+            >
+              <InputOTPGroup>
+                {[...Array(PAYMENT_CODE_LENGTH)].map((_, index) => (
+                  <InputOTPSlot 
+                    key={index} 
+                    index={index}
+                    className={cn(
+                      "w-14 h-14 text-2xl font-mono border-2 transition-all",
+                      index < paymentCode.length && "border-primary bg-primary/5"
+                    )}
+                  />
+                ))}
+              </InputOTPGroup>
+            </InputOTP>
+            <div className="flex justify-center gap-2">
+              {[...Array(PAYMENT_CODE_LENGTH)].map((_, i) => (
+                <div 
+                  key={i} 
+                  className={cn(
+                    "w-3 h-3 rounded-full transition-colors",
+                    i < paymentCode.length ? "bg-primary" : "bg-border"
+                  )} 
+                />
+              ))}
+            </div>
           </div>
 
           {retryCount > 0 && <Card className="bg-destructive/5 border-destructive/20"><CardContent className="p-4"><div className="flex items-start gap-2"><AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" /><div className="text-sm space-y-1"><p className="font-semibold text-destructive">Attempt {retryCount} of {MAX_PAYMENT_RETRIES}</p><p className="text-muted-foreground">{MAX_PAYMENT_RETRIES - retryCount} attempts remaining before order cancellation</p></div></div></CardContent></Card>}
