@@ -13,6 +13,7 @@ const mockFlights: Flight[] = [{
   arrival: "London (LHR)",
   departureTime: "10:00 AM",
   arrivalTime: "10:00 PM",
+  duration: "12h 00m",
   price: 450,
   airline: "CalfonAirline"
 }, {
@@ -22,6 +23,7 @@ const mockFlights: Flight[] = [{
   arrival: "Tokyo (NRT)",
   departureTime: "2:30 PM",
   arrivalTime: "6:00 PM +1",
+  duration: "15h 30m",
   price: 720,
   airline: "CalfonAirline"
 }, {
@@ -31,6 +33,7 @@ const mockFlights: Flight[] = [{
   arrival: "Paris (CDG)",
   departureTime: "6:45 PM",
   arrivalTime: "2:30 PM +1",
+  duration: "11h 45m",
   price: 580,
   airline: "CalfonAirline"
 }];
@@ -66,9 +69,13 @@ const FlightSelection = ({
                       <div className="text-sm text-muted-foreground">{flight.departure}</div>
                     </div>
                     
-                    {/* Arrow */}
-                    <div className="flex items-center justify-center px-2">
-                      <ArrowRight className="w-6 h-6 text-primary" />
+                    {/* Duration & Arrow */}
+                    <div className="flex flex-col items-center justify-center px-2">
+                      <ArrowRight className="w-6 h-6 text-primary mb-1" />
+                      <div className="flex items-center gap-1.5 bg-primary/10 px-3 py-1 rounded-full">
+                        <Clock className="w-3.5 h-3.5 text-primary" />
+                        <span className="text-xs font-semibold text-primary">{flight.duration}</span>
+                      </div>
                     </div>
                     
                     {/* Arrival */}
