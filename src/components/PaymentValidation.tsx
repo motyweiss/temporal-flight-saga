@@ -141,15 +141,12 @@ const PaymentValidation = ({
           <CardDescription>Enter the {PAYMENT_CODE_LENGTH}-digit code you received</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex justify-center">
             <InputOTP maxLength={PAYMENT_CODE_LENGTH} value={paymentCode} onChange={value => setPaymentCode(value)} disabled={isValidating}>
-              <InputOTPGroup>
-                {[...Array(PAYMENT_CODE_LENGTH)].map((_, index) => <InputOTPSlot key={index} index={index} className={cn("w-14 h-14 text-2xl font-mono border-2 transition-all", index < paymentCode.length && "border-primary bg-primary/5")} />)}
+              <InputOTPGroup className="gap-3">
+                {[...Array(PAYMENT_CODE_LENGTH)].map((_, index) => <InputOTPSlot key={index} index={index} className={cn("w-16 h-16 text-3xl font-bold border-2 rounded-lg transition-all duration-200", index < paymentCode.length ? "border-primary bg-primary/5 shadow-sm" : "border-input")} />)}
               </InputOTPGroup>
             </InputOTP>
-            <div className="flex justify-center gap-2">
-              {[...Array(PAYMENT_CODE_LENGTH)].map((_, i) => <div key={i} className={cn("w-3 h-3 rounded-full transition-colors", i < paymentCode.length ? "bg-primary" : "bg-border")} />)}
-            </div>
           </div>
 
           {retryCount > 0 && validationStatus !== "success" && <Card className="bg-destructive/5 border-destructive/20">
