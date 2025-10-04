@@ -89,8 +89,8 @@ const FlightSelection = ({
                     </div>
                   </div>
                   
-                  <Button onClick={() => onSelectFlight(flight)} className="gradient-primary shadow-md hover:shadow-glow whitespace-nowrap" size="lg" aria-label={`Select flight ${flight.flightNumber}`}>
-                    Select Flight
+                  <Button onClick={() => onSelectFlight(flight)} className="gradient-primary shadow-md hover:shadow-glow whitespace-nowrap" size="lg" aria-label={`Book flight ${flight.flightNumber}`}>
+                    Book Now
                     <Plane className="ml-2 h-5 w-5" />
                   </Button>
                 </div>
