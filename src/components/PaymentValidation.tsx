@@ -8,53 +8,68 @@ import { CreditCard, Clock, AlertCircle, Loader2, ShieldCheck } from "lucide-rea
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { PAYMENT_VALIDATION_TIMEOUT, MAX_PAYMENT_RETRIES, PAYMENT_FAILURE_RATE, PAYMENT_CODE_LENGTH, ORDER_ID_PREFIX, ORDER_ID_LENGTH } from "@/constants/booking";
-
 interface PaymentValidationProps {
   onSuccess: (orderId: string) => void;
   onFailure: () => void;
 }
-
-const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => {
+const PaymentValidation = ({
+  onSuccess,
+  onFailure
+}: PaymentValidationProps) => {
   const [paymentCode, setPaymentCode] = useState("");
   const [isValidating, setIsValidating] = useState(false);
   const [validationStatus, setValidationStatus] = useState<"idle" | "validating" | "success" | "error">("idle");
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [retryCount, setRetryCount] = useState(0);
-  const [validationHistory, setValidationHistory] = useState<{ attempt: number; result: "success" | "failed"; timestamp: Date }[]>([]);
-
+  const [validationHistory, setValidationHistory] = useState<{
+    attempt: number;
+    result: "success" | "failed";
+    timestamp: Date;
+  }[]>([]);
   useEffect(() => {
     if (timeRemaining === null || timeRemaining <= 0) return;
-    const timer = setInterval(() => setTimeRemaining((prev) => (prev !== null ? prev - 1 : null)), 1000);
+    const timer = setInterval(() => setTimeRemaining(prev => prev !== null ? prev - 1 : null), 1000);
     return () => clearInterval(timer);
   }, [timeRemaining]);
-
   const generateOrderId = () => `${ORDER_ID_PREFIX}-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-
-  const validatePaymentCode = async () => new Promise<boolean>((resolve) => setTimeout(() => resolve(Math.random() > PAYMENT_FAILURE_RATE), 2000));
-
+  const validatePaymentCode = async () => new Promise<boolean>(resolve => setTimeout(() => resolve(Math.random() > PAYMENT_FAILURE_RATE), 2000));
   const handleValidationFailure = () => {
     setIsValidating(false);
     setValidationStatus("error");
     setTimeRemaining(null);
-    const newAttempt = { attempt: retryCount + 1, result: "failed" as const, timestamp: new Date() };
+    const newAttempt = {
+      attempt: retryCount + 1,
+      result: "failed" as const,
+      timestamp: new Date()
+    };
     setValidationHistory([...validationHistory, newAttempt]);
-
     if (retryCount >= MAX_PAYMENT_RETRIES - 1) {
-      toast({ title: "Payment Failed", description: `Maximum attempts (${MAX_PAYMENT_RETRIES}) reached. Order cancelled.`, variant: "destructive" });
+      toast({
+        title: "Payment Failed",
+        description: `Maximum attempts (${MAX_PAYMENT_RETRIES}) reached. Order cancelled.`,
+        variant: "destructive"
+      });
       setTimeout(() => onFailure(), 3000);
     } else {
       setRetryCount(retryCount + 1);
-      toast({ title: "Validation Failed", description: `Attempt ${retryCount + 1} of ${MAX_PAYMENT_RETRIES} failed. Try again.`, variant: "destructive" });
+      toast({
+        title: "Validation Failed",
+        description: `Attempt ${retryCount + 1} of ${MAX_PAYMENT_RETRIES} failed. Try again.`,
+        variant: "destructive"
+      });
       setTimeout(() => {
         setPaymentCode("");
         setValidationStatus("idle");
       }, 2000);
     }
   };
-
   const handleSubmit = async () => {
     if (paymentCode.length !== PAYMENT_CODE_LENGTH) {
-      toast({ title: "Invalid Code", description: `Payment code must be exactly ${PAYMENT_CODE_LENGTH} digits`, variant: "destructive" });
+      toast({
+        title: "Invalid Code",
+        description: `Payment code must be exactly ${PAYMENT_CODE_LENGTH} digits`,
+        variant: "destructive"
+      });
       return;
     }
     setIsValidating(true);
@@ -64,8 +79,15 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
     if (timeRemaining !== null && timeRemaining > 0) {
       if (isValid) {
         setValidationStatus("success");
-        setValidationHistory([...validationHistory, { attempt: retryCount + 1, result: "success" as const, timestamp: new Date() }]);
-        toast({ title: "Payment Approved!", description: "Your payment has been validated successfully" });
+        setValidationHistory([...validationHistory, {
+          attempt: retryCount + 1,
+          result: "success" as const,
+          timestamp: new Date()
+        }]);
+        toast({
+          title: "Payment Approved!",
+          description: "Your payment has been validated successfully"
+        });
         setTimeout(() => onSuccess(generateOrderId()), 2000);
       } else {
         handleValidationFailure();
@@ -74,27 +96,23 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
       // Time expired during validation
       setValidationStatus("error");
       setIsValidating(false);
-      toast({ title: "Time Expired", description: "Validation time has expired. Please try again.", variant: "destructive" });
+      toast({
+        title: "Time Expired",
+        description: "Validation time has expired. Please try again.",
+        variant: "destructive"
+      });
       setTimeout(() => onFailure(), 2000);
     }
   };
-
-  const progress = timeRemaining !== null ? ((PAYMENT_VALIDATION_TIMEOUT - timeRemaining) / PAYMENT_VALIDATION_TIMEOUT) * 100 : 0;
-
-  return (
-    <div className="max-w-2xl mx-auto space-y-6">
+  const progress = timeRemaining !== null ? (PAYMENT_VALIDATION_TIMEOUT - timeRemaining) / PAYMENT_VALIDATION_TIMEOUT * 100 : 0;
+  return <div className="max-w-2xl mx-auto space-y-6">
       <div className="text-center space-y-3 animate-slide-up">
-        <div className="flex justify-center mb-4">
-          <div className="w-16 h-16 rounded-full bg-gradient-magic flex items-center justify-center shadow-glow animate-float">
-            <CreditCard className="w-8 h-8 text-white" />
-          </div>
-        </div>
+        
         <h2 className="text-4xl font-bold">Payment Validation</h2>
         <p className="text-muted-foreground text-lg">Enter your {PAYMENT_CODE_LENGTH}-digit payment code to complete your booking</p>
       </div>
 
-      {timeRemaining !== null && (
-        <Card className="border-2 border-primary/50 shadow-lg animate-scale-in">
+      {timeRemaining !== null && <Card className="border-2 border-primary/50 shadow-lg animate-scale-in">
           <CardContent className="p-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -110,10 +128,11 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
               <Progress value={progress} className="h-2" />
             </div>
           </CardContent>
-        </Card>
-      )}
+        </Card>}
 
-      <Card className="shadow-lg animate-slide-up" style={{ animationDelay: '0.1s' }}>
+      <Card className="shadow-lg animate-slide-up" style={{
+      animationDelay: '0.1s'
+    }}>
         <CardHeader className="text-center">
           <CardTitle className="flex items-center justify-center gap-2 text-2xl">
             <CreditCard className="w-6 h-6 text-primary" />
@@ -123,40 +142,17 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex flex-col items-center space-y-4">
-            <InputOTP
-              maxLength={PAYMENT_CODE_LENGTH}
-              value={paymentCode}
-              onChange={(value) => setPaymentCode(value)}
-              disabled={isValidating}
-            >
+            <InputOTP maxLength={PAYMENT_CODE_LENGTH} value={paymentCode} onChange={value => setPaymentCode(value)} disabled={isValidating}>
               <InputOTPGroup>
-                {[...Array(PAYMENT_CODE_LENGTH)].map((_, index) => (
-                  <InputOTPSlot 
-                    key={index} 
-                    index={index}
-                    className={cn(
-                      "w-14 h-14 text-2xl font-mono border-2 transition-all",
-                      index < paymentCode.length && "border-primary bg-primary/5"
-                    )}
-                  />
-                ))}
+                {[...Array(PAYMENT_CODE_LENGTH)].map((_, index) => <InputOTPSlot key={index} index={index} className={cn("w-14 h-14 text-2xl font-mono border-2 transition-all", index < paymentCode.length && "border-primary bg-primary/5")} />)}
               </InputOTPGroup>
             </InputOTP>
             <div className="flex justify-center gap-2">
-              {[...Array(PAYMENT_CODE_LENGTH)].map((_, i) => (
-                <div 
-                  key={i} 
-                  className={cn(
-                    "w-3 h-3 rounded-full transition-colors",
-                    i < paymentCode.length ? "bg-primary" : "bg-border"
-                  )} 
-                />
-              ))}
+              {[...Array(PAYMENT_CODE_LENGTH)].map((_, i) => <div key={i} className={cn("w-3 h-3 rounded-full transition-colors", i < paymentCode.length ? "bg-primary" : "bg-border")} />)}
             </div>
           </div>
 
-          {retryCount > 0 && validationStatus !== "success" && (
-            <Card className="bg-destructive/5 border-destructive/20">
+          {retryCount > 0 && validationStatus !== "success" && <Card className="bg-destructive/5 border-destructive/20">
               <CardContent className="p-4">
                 <div className="flex items-start gap-2">
                   <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
@@ -166,12 +162,10 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
                   </div>
                 </div>
               </CardContent>
-            </Card>
-          )}
+            </Card>}
 
           {/* Validation Status Messages */}
-          {validationStatus === "success" && (
-            <Card className="bg-success/10 border-success/30 animate-scale-in">
+          {validationStatus === "success" && <Card className="bg-success/10 border-success/30 animate-scale-in">
               <CardContent className="p-6">
                 <div className="flex flex-col items-center gap-4 text-center">
                   <div className="w-16 h-16 rounded-full bg-success flex items-center justify-center">
@@ -183,11 +177,9 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
                   </div>
                 </div>
               </CardContent>
-            </Card>
-          )}
+            </Card>}
 
-          {validationStatus === "error" && retryCount >= MAX_PAYMENT_RETRIES - 1 && (
-            <Card className="bg-destructive/10 border-destructive/30 animate-scale-in">
+          {validationStatus === "error" && retryCount >= MAX_PAYMENT_RETRIES - 1 && <Card className="bg-destructive/10 border-destructive/30 animate-scale-in">
               <CardContent className="p-6">
                 <div className="flex flex-col items-center gap-4 text-center">
                   <div className="w-16 h-16 rounded-full bg-destructive flex items-center justify-center">
@@ -199,36 +191,22 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
                   </div>
                 </div>
               </CardContent>
-            </Card>
-          )}
+            </Card>}
 
-          <Button 
-            size="lg" 
-            className="w-full gradient-primary shadow-md hover:shadow-glow transition-all text-lg h-14" 
-            onClick={handleSubmit} 
-            disabled={paymentCode.length !== PAYMENT_CODE_LENGTH || isValidating || validationStatus === "success" || (validationStatus === "error" && retryCount >= MAX_PAYMENT_RETRIES - 1)}
-          >
-            {validationStatus === "validating" ? (
-              <>
+          <Button size="lg" className="w-full gradient-primary shadow-md hover:shadow-glow transition-all text-lg h-14" onClick={handleSubmit} disabled={paymentCode.length !== PAYMENT_CODE_LENGTH || isValidating || validationStatus === "success" || validationStatus === "error" && retryCount >= MAX_PAYMENT_RETRIES - 1}>
+            {validationStatus === "validating" ? <>
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                 Validating Payment...
-              </>
-            ) : validationStatus === "success" ? (
-              <>
+              </> : validationStatus === "success" ? <>
                 <ShieldCheck className="w-5 h-5 mr-2" />
                 Payment Validated!
-              </>
-            ) : (
-              <>
+              </> : <>
                 Validate Payment
                 <ShieldCheck className="ml-2 h-5 w-5" />
-              </>
-            )}
+              </>}
           </Button>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
-
 export default PaymentValidation;
