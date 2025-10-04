@@ -12,7 +12,7 @@ const Header = () => {
               className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-102"
             />
             <div className="hidden sm:block">
-              <p className="text-xs text-muted-foreground">Professional Flight Booking</p>
+              <p className="text-xs text-muted-foreground">Flight Booking</p>
             </div>
           </div>
           
