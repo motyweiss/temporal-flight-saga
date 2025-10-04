@@ -70,7 +70,7 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="text-center space-y-3 animate-slide-up">
-        <div className="flex justify-center mb-4"><div className="w-16 h-16 rounded-full bg-gradient-magic flex items-center justify-center shadow-glow animate-float"><ShieldCheck className="w-8 h-8 text-white" /></div></div>
+        <div className="flex justify-center mb-4"><div className="w-16 h-16 rounded-full bg-gradient-magic flex items-center justify-center shadow-glow animate-float"><CreditCard className="w-8 h-8 text-white" /></div></div>
         <h2 className="text-4xl font-bold">Payment Validation</h2>
         <p className="text-muted-foreground text-lg">Enter your {PAYMENT_CODE_LENGTH}-digit payment code to complete your booking</p>
       </div>
