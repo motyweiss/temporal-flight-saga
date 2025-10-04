@@ -7,7 +7,7 @@ import { Flight, Seat } from "@/types/booking";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { Clock, AlertTriangle, Users, DollarSign, Armchair, Star } from "lucide-react";
+import { Clock, AlertTriangle, Users, DollarSign, Armchair, Star, Wifi, Tv, UtensilsCrossed, Plug } from "lucide-react";
 import {
   SEAT_RESERVATION_TIMEOUT,
   TIMER_WARNING_THRESHOLD,
@@ -220,6 +220,42 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
+            {/* Aircraft Info & Amenities */}
+            <div className="mb-6 p-4 bg-muted/20 rounded-lg border">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h3 className="font-semibold text-lg">Boeing 737-800</h3>
+                  <p className="text-sm text-muted-foreground">186 seats • 2-class configuration</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Wifi className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium">WiFi</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Tv className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium">Entertainment</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <UtensilsCrossed className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium">Meal Service</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Plug className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium">Power Outlets</span>
+                </div>
+              </div>
+            </div>
+
             {/* Legend */}
             <div className="flex flex-wrap gap-6 mb-8 p-4 bg-muted/20 rounded-lg border">
               <div className="flex items-center gap-2">
