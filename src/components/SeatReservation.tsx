@@ -7,7 +7,7 @@ import { Flight, Seat } from "@/types/booking";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { Clock, AlertTriangle, Users, DollarSign, Armchair } from "lucide-react";
+import { Clock, AlertTriangle, Users, DollarSign, Armchair, Star } from "lucide-react";
 import {
   SEAT_RESERVATION_TIMEOUT,
   TIMER_WARNING_THRESHOLD,
@@ -261,13 +261,15 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
                 return (
                   <div key={row}>
                     {isBusinessRow && row === BUSINESS_CLASS_ROWS[0] && (
-                      <div className="bg-accent/10 py-2 px-4 rounded-md mb-4 border border-accent/30">
-                        <span className="text-sm font-semibold text-accent-foreground">Business Class</span>
+                      <div className="bg-accent/10 py-2 px-4 rounded-md mb-4 border border-accent/30 flex items-center gap-2">
+                        <Star className="w-4 h-4 text-foreground" />
+                        <span className="text-sm font-semibold text-foreground">Business Class</span>
                       </div>
                     )}
                     {!isBusinessRow && row === BUSINESS_CLASS_ROWS[BUSINESS_CLASS_ROWS.length - 1] + 1 && (
-                      <div className="bg-muted/30 py-2 px-4 rounded-md mb-4 border">
-                        <span className="text-sm font-semibold text-muted-foreground">Economy Class</span>
+                      <div className="bg-muted/30 py-2 px-4 rounded-md mb-4 border flex items-center gap-2">
+                        <Armchair className="w-4 h-4 text-foreground" />
+                        <span className="text-sm font-semibold text-foreground">Economy Class</span>
                       </div>
                     )}
                     
