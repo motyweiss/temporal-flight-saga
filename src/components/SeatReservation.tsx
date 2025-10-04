@@ -162,50 +162,53 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
         </p>
       </div>
 
-      {/* Timer Card */}
-      <Card className={cn(
-        "shadow-lg border-2 transition-all duration-300 animate-slide-up",
-        isCritical && "border-destructive bg-destructive/5 animate-pulse",
-        isWarning && !isCritical && "border-warning bg-warning/5"
-      )}>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className={cn(
-                "w-12 h-12 rounded-full flex items-center justify-center",
-                isCritical && "bg-destructive/20 animate-pulse",
-                isWarning && !isCritical && "bg-warning/20",
-                !isWarning && "bg-primary/20"
-              )}>
-                <Clock className={cn(
-                  "w-6 h-6",
-                  isCritical && "text-destructive",
-                  isWarning && !isCritical && "text-warning",
-                  !isWarning && "text-primary"
-                )} />
-              </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Time Remaining</div>
+      {/* Timer Card - Floating at bottom */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4 animate-slide-up">
+        <Card className={cn(
+          "backdrop-blur-xl bg-background/80 border shadow-xl transition-all duration-300",
+          isCritical && "border-destructive/50 bg-destructive/10 animate-pulse shadow-destructive/20",
+          isWarning && !isCritical && "border-warning/50 bg-warning/10 shadow-warning/20",
+          !isWarning && "border-primary/30 shadow-primary/10"
+        )}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
                 <div className={cn(
-                  "text-3xl font-bold font-mono transition-colors",
-                  isCritical && "text-destructive",
-                  isWarning && !isCritical && "text-warning",
-                  !isWarning && "text-primary"
+                  "w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm",
+                  isCritical && "bg-destructive/20 animate-pulse",
+                  isWarning && !isCritical && "bg-warning/20",
+                  !isWarning && "bg-primary/20"
                 )}>
-                  {formatTime(timeRemaining)}
+                  <Clock className={cn(
+                    "w-5 h-5",
+                    isCritical && "text-destructive",
+                    isWarning && !isCritical && "text-warning",
+                    !isWarning && "text-primary"
+                  )} />
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground">Time Left</div>
+                  <div className={cn(
+                    "text-2xl font-bold font-mono transition-colors",
+                    isCritical && "text-destructive",
+                    isWarning && !isCritical && "text-warning",
+                    !isWarning && "text-primary"
+                  )}>
+                    {formatTime(timeRemaining)}
+                  </div>
                 </div>
               </div>
+              {isWarning && (
+                <Badge variant={isCritical ? "destructive" : "default"} className="flex items-center gap-1.5 text-sm px-3 py-1">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  {isCritical ? "Critical!" : "Hurry!"}
+                </Badge>
+              )}
             </div>
-            {isWarning && (
-              <Badge variant={isCritical ? "destructive" : "default"} className="flex items-center gap-2 text-base px-4 py-2">
-                <AlertTriangle className="w-4 h-4" />
-                {isCritical ? "Critical!" : "Hurry Up!"}
-              </Badge>
-            )}
-          </div>
-          <Progress value={progress} className="h-2" />
-        </CardContent>
-      </Card>
+            <Progress value={progress} className="h-1.5 mt-3" />
+          </CardContent>
+        </Card>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Seat Map */}
