@@ -17,46 +17,58 @@ const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
   const currentIndex = steps.findIndex((step) => step.id === currentStep);
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <div className="flex items-center justify-between relative">
-        {/* Progress Line */}
-        <div className="absolute top-5 left-0 right-0 h-0.5 bg-border -z-10" />
+    <div className="w-full max-w-5xl mx-auto px-4">
+      <div className="relative">
+        {/* Progress Line Background */}
+        <div className="absolute top-6 left-0 right-0 h-1 bg-muted/30 rounded-full" />
+        
+        {/* Active Progress Line */}
         <div 
-          className="absolute top-5 left-0 h-0.5 bg-gradient-primary -z-10 transition-all duration-500 ease-out"
+          className="absolute top-6 left-0 h-1 bg-gradient-primary rounded-full transition-all duration-700 ease-out"
           style={{ width: `${(currentIndex / (steps.length - 1)) * 100}%` }}
         />
 
-        {steps.map((step, index) => {
-          const isCompleted = index < currentIndex;
-          const isCurrent = index === currentIndex;
+        {/* Steps Container */}
+        <div className="flex items-start justify-between relative">
+          {steps.map((step, index) => {
+            const isCompleted = index < currentIndex;
+            const isCurrent = index === currentIndex;
 
-          return (
-            <div key={step.id} className="flex flex-col items-center flex-1 relative">
-              <div
-                className={cn(
-                  "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 bg-card z-10",
-                  isCompleted && "bg-success border-success text-success-foreground shadow-md animate-scale-in",
-                  isCurrent && "bg-primary border-primary text-primary-foreground shadow-glow animate-pulse-glow",
-                  !isCompleted && !isCurrent && "border-border text-muted-foreground"
-                )}
-              >
-                {isCompleted ? (
-                  <Check className="w-5 h-5" />
-                ) : (
-                  <span className="text-sm font-semibold">{index + 1}</span>
-                )}
+            return (
+              <div key={step.id} className="flex flex-col items-center flex-1">
+                {/* Step Circle */}
+                <div
+                  className={cn(
+                    "w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 bg-background z-10 relative",
+                    isCompleted && "bg-success border-success text-white shadow-lg",
+                    isCurrent && "bg-primary border-primary text-white shadow-xl scale-110",
+                    !isCompleted && !isCurrent && "border-muted text-muted-foreground"
+                  )}
+                  aria-label={`Step ${index + 1}: ${step.label}`}
+                  aria-current={isCurrent ? "step" : undefined}
+                >
+                  {isCompleted ? (
+                    <Check className="w-6 h-6" />
+                  ) : (
+                    <span className="text-base font-bold">{index + 1}</span>
+                  )}
+                </div>
+                
+                {/* Step Label */}
+                <div className="mt-3 text-center">
+                  <span
+                    className={cn(
+                      "text-sm transition-all duration-300 block",
+                      isCurrent ? "text-foreground font-bold" : "text-muted-foreground font-medium"
+                    )}
+                  >
+                    {step.label}
+                  </span>
+                </div>
               </div>
-              <span
-                className={cn(
-                  "text-xs mt-3 text-center transition-all duration-300 hidden sm:block absolute top-full whitespace-nowrap",
-                  isCurrent ? "text-foreground font-semibold scale-105" : "text-muted-foreground"
-                )}
-              >
-                {step.label}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
