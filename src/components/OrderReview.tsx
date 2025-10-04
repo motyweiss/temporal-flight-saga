@@ -89,39 +89,39 @@ const OrderReview = ({ flight, seats, onConfirm, onBack }: OrderReviewProps) => 
       </Card>
 
       <Card className="shadow-lg animate-slide-up" style={{ animationDelay: '100ms' }}>
-        <CardHeader><CardTitle className="flex items-center gap-2"><Plane className="w-6 h-6 text-primary" />Flight Details</CardTitle></CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div><div className="text-sm text-muted-foreground">Flight Number</div><div className="font-bold text-xl">{flight.flightNumber}</div></div>
-              <div><div className="text-sm text-muted-foreground">Airline</div><div className="font-bold text-xl">{flight.airline}</div></div>
+        <CardHeader><CardTitle className="flex items-center gap-2 text-lg sm:text-xl"><Plane className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />Flight Details</CardTitle></CardHeader>
+        <CardContent className="space-y-4 sm:space-y-6">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6">
+            <div className="space-y-3 sm:space-y-4">
+              <div><div className="text-xs sm:text-sm text-muted-foreground">Flight Number</div><div className="font-bold text-lg sm:text-xl">{flight.flightNumber}</div></div>
+              <div><div className="text-xs sm:text-sm text-muted-foreground">Airline</div><div className="font-bold text-lg sm:text-xl">{flight.airline}</div></div>
             </div>
-            <div className="space-y-4">
-              <div><div className="flex items-center gap-2 mb-2"><MapPin className="w-4 h-4 text-primary" /><span className="text-sm text-muted-foreground">Departure</span></div><div className="font-semibold">{flight.departure}</div><div className="text-2xl font-bold text-primary">{flight.departureTime}</div></div>
-              <div><div className="flex items-center gap-2 mb-2"><MapPin className="w-4 h-4 text-primary" /><span className="text-sm text-muted-foreground">Arrival</span></div><div className="font-semibold">{flight.arrival}</div><div className="text-2xl font-bold text-primary">{flight.arrivalTime}</div></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div><div className="flex items-center gap-2 mb-2"><MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" /><span className="text-xs sm:text-sm text-muted-foreground">Departure</span></div><div className="font-semibold text-sm sm:text-base">{flight.departure}</div><div className="text-xl sm:text-2xl font-bold text-primary">{flight.departureTime}</div></div>
+              <div><div className="flex items-center gap-2 mb-2"><MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" /><span className="text-xs sm:text-sm text-muted-foreground">Arrival</span></div><div className="font-semibold text-sm sm:text-base">{flight.arrival}</div><div className="text-xl sm:text-2xl font-bold text-primary">{flight.arrivalTime}</div></div>
             </div>
           </div>
         </CardContent>
       </Card>
 
       <Card className="shadow-lg animate-slide-up" style={{ animationDelay: '150ms' }}>
-        <CardHeader><CardTitle className="flex items-center gap-2"><Users className="w-6 h-6 text-primary" />Selected Seats</CardTitle></CardHeader>
-        <CardContent><div className="flex flex-wrap gap-3">{seats.map((seat) => <Badge key={seat.id} variant="secondary" className="px-4 py-2 text-lg font-semibold">{seat.id}</Badge>)}</div></CardContent>
+        <CardHeader><CardTitle className="flex items-center gap-2 text-lg sm:text-xl"><Users className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />Selected Seats</CardTitle></CardHeader>
+        <CardContent><div className="flex flex-wrap gap-2 sm:gap-3">{seats.map((seat) => <Badge key={seat.id} variant="secondary" className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base md:text-lg font-semibold">{seat.id}</Badge>)}</div></CardContent>
       </Card>
 
       <Card className="shadow-lg animate-slide-up" style={{ animationDelay: '200ms' }}>
-        <CardHeader><CardTitle className="flex items-center gap-2"><DollarSign className="w-6 h-6 text-primary" />Price Breakdown</CardTitle></CardHeader>
-        <CardContent><div className="space-y-4">
-          <div className="flex justify-between text-lg"><span className="text-muted-foreground">Base Flight Price</span><span className="font-semibold">${flight.price}</span></div>
-          <div className="flex justify-between text-lg"><span className="text-muted-foreground">Seat Selection ({seats.length} seats)</span><span className="font-semibold">${seats.reduce((sum, s) => sum + s.price, 0)}</span></div>
+        <CardHeader><CardTitle className="flex items-center gap-2 text-lg sm:text-xl"><DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />Price Breakdown</CardTitle></CardHeader>
+        <CardContent><div className="space-y-3 sm:space-y-4">
+          <div className="flex justify-between text-sm sm:text-base md:text-lg"><span className="text-muted-foreground">Base Flight Price</span><span className="font-semibold">${flight.price}</span></div>
+          <div className="flex justify-between text-sm sm:text-base md:text-lg"><span className="text-muted-foreground">Seat Selection ({seats.length} seats)</span><span className="font-semibold">${seats.reduce((sum, s) => sum + s.price, 0)}</span></div>
           <Separator />
-          <div className="flex justify-between items-center pt-2"><span className="text-2xl font-bold">Total Amount</span><span className="text-5xl font-bold bg-gradient-magic bg-clip-text text-transparent">${totalPrice}</span></div>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2 pt-2"><span className="text-lg sm:text-xl md:text-2xl font-bold">Total Amount</span><span className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-magic bg-clip-text text-transparent">${totalPrice}</span></div>
         </div></CardContent>
       </Card>
 
-      <div className="flex flex-col sm:flex-row gap-4 animate-slide-up" style={{ animationDelay: '300ms' }}>
-        <Button onClick={onBack} variant="outline" size="lg" className="flex-1">Back to Seats</Button>
-        <Button onClick={onConfirm} className="flex-1 gradient-primary shadow-md hover:shadow-glow" size="lg">Proceed to Payment<DollarSign className="ml-2 h-5 w-5" /></Button>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-slide-up" style={{ animationDelay: '300ms' }}>
+        <Button onClick={onBack} variant="outline" size="lg" className="flex-1 touch-target h-12 sm:h-14">Back to Seats</Button>
+        <Button onClick={onConfirm} className="flex-1 gradient-primary shadow-md hover:shadow-glow touch-target h-12 sm:h-14" size="lg">Proceed to Payment<DollarSign className="ml-2 h-4 w-4 sm:h-5 sm:w-5" /></Button>
       </div>
     </div>
   );

@@ -52,55 +52,67 @@ const FlightSelection = ({
         {mockFlights.map((flight, index) => <Card key={flight.id} className="group hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden border hover:border-primary/50 animate-slide-up" style={{
         animationDelay: `${index * 100}ms`
       }} onClick={() => onSelectFlight(flight)}>
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:gap-6">
                 
-                {/* Flight Info */}
-                <div className="flex items-center gap-6 flex-1">
-                  <Badge variant="secondary" className="text-sm font-semibold whitespace-nowrap">
+                {/* Flight Number Badge */}
+                <div className="flex items-center justify-between">
+                  <Badge variant="secondary" className="text-xs sm:text-sm font-semibold whitespace-nowrap">
                     {flight.flightNumber}
                   </Badge>
-                  
-                  <div className="flex items-center gap-4 flex-1">
-                    {/* Departure */}
-                    <div className="flex-1">
-                      <div className="text-sm text-muted-foreground mb-1">Departure</div>
-                      <div className="font-bold text-lg">{flight.departureTime}</div>
-                      <div className="text-sm text-muted-foreground">{flight.departure}</div>
-                    </div>
-                    
-                    {/* Duration & Arrow */}
-                    <div className="flex flex-col items-center justify-center px-2">
-                      <ArrowRight className="w-6 h-6 text-primary mb-1" />
-                      <div className="flex items-center gap-1.5 bg-primary/10 px-3 py-1 rounded-full">
-                        <Clock className="w-3.5 h-3.5 text-primary" />
-                        <span className="text-xs font-semibold text-primary">{flight.duration}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Arrival */}
-                    <div className="flex-1">
-                      <div className="text-sm text-muted-foreground mb-1">Arrival</div>
-                      <div className="font-bold text-lg">{flight.arrivalTime}</div>
-                      <div className="text-sm text-muted-foreground">{flight.arrival}</div>
+                  <div className="sm:hidden">
+                    <div className="text-xl sm:text-3xl font-bold text-primary">
+                      ${flight.price}
                     </div>
                   </div>
                 </div>
+                
+                {/* Flight Route Info */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+                  {/* Departure */}
+                  <div className="flex-1 text-center sm:text-left">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">Departure</div>
+                    <div className="font-bold text-base sm:text-lg">{flight.departureTime}</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">{flight.departure}</div>
+                  </div>
+                  
+                  {/* Duration & Arrow */}
+                  <div className="flex flex-col items-center justify-center px-2">
+                    <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-primary mb-1" />
+                    <div className="flex items-center gap-1.5 bg-primary/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full">
+                      <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
+                      <span className="text-[10px] sm:text-xs font-semibold text-primary">{flight.duration}</span>
+                    </div>
+                  </div>
+                  
+                  {/* Arrival */}
+                  <div className="flex-1 text-center sm:text-left">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">Arrival</div>
+                    <div className="font-bold text-base sm:text-lg">{flight.arrivalTime}</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">{flight.arrival}</div>
+                  </div>
+                </div>
 
-                {/* Price & Action */}
-                <div className="flex items-center gap-6 md:border-l md:pl-6">
+                {/* Price & Action - Desktop */}
+                <div className="hidden sm:flex items-center justify-between gap-4 pt-2 border-t">
                   <div className="text-center">
                     <div className="text-sm text-muted-foreground mb-1">Price</div>
-                    <div className="text-3xl font-bold text-primary">
+                    <div className="text-2xl sm:text-3xl font-bold text-primary">
                       ${flight.price}
                     </div>
                   </div>
                   
-                  <Button onClick={() => onSelectFlight(flight)} className="gradient-primary shadow-md hover:shadow-glow whitespace-nowrap" size="lg" aria-label={`Book flight ${flight.flightNumber}`}>
+                  <Button onClick={() => onSelectFlight(flight)} className="gradient-primary shadow-md hover:shadow-glow whitespace-nowrap touch-target" size="lg" aria-label={`Book flight ${flight.flightNumber}`}>
                     Book Now
-                    <Plane className="ml-2 h-5 w-5" />
+                    <Plane className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </div>
+                
+                {/* Action Button - Mobile Full Width */}
+                <Button onClick={() => onSelectFlight(flight)} className="sm:hidden w-full gradient-primary shadow-md hover:shadow-glow touch-target" size="lg" aria-label={`Book flight ${flight.flightNumber}`}>
+                  Book Now
+                  <Plane className="ml-2 h-5 w-5" />
+                </Button>
               </div>
             </CardContent>
           </Card>)}

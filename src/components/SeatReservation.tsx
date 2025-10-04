@@ -162,8 +162,8 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
         </p>
       </div>
 
-      {/* Timer Card - Floating at bottom */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4 animate-slide-up">
+      {/* Timer Card - Mobile: top, Desktop: floating bottom */}
+      <div className="lg:fixed lg:bottom-6 lg:left-1/2 lg:-translate-x-1/2 z-50 w-full max-w-md px-0 lg:px-4 mb-6 lg:mb-0 animate-slide-up">
         <Card className={cn(
           "backdrop-blur-xl bg-background/80 border shadow-xl transition-all duration-300",
           isCritical && "border-destructive/50 bg-destructive/10 animate-pulse shadow-destructive/20",
@@ -285,7 +285,7 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
             </div>
 
             {/* Seat Grid */}
-            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+            <div className="space-y-2 sm:space-y-4 max-h-[600px] overflow-y-auto overflow-x-auto pr-2 max-w-full">
               {/* Front of Plane Indicator */}
               <div className="text-center py-4 border-b-2 border-dashed border-muted-foreground/20">
                 <div className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium">
@@ -312,11 +312,11 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
                       </div>
                     )}
                     
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 text-center font-bold text-sm text-muted-foreground bg-muted/30 py-2 rounded">
+                    <div className="flex items-center gap-1 sm:gap-3">
+                      <div className="w-8 sm:w-10 text-center font-bold text-xs sm:text-sm text-muted-foreground bg-muted/30 py-1 sm:py-2 rounded">
                         {row}
                       </div>
-                      <div className="flex gap-2 flex-1 justify-center">
+                      <div className="flex gap-1 sm:gap-2 flex-1 justify-center">
                         {SEAT_COLUMNS.map((column, colIndex) => {
                           const seat = seats.find(
                             (s) => s.row === row && s.column === column
@@ -327,16 +327,16 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
                           
                           return (
                             <>
-                              {colIndex === 3 && <div className="w-8" />}
-                              <TooltipProvider key={seat.id}>
+                              {colIndex === 3 && <div className="w-2 sm:w-8" />}
+                              <TooltipProvider key={`seat-${seat.id}`}>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <button
                                       onClick={() => handleSeatClick(seat)}
                                       disabled={!seat.isAvailable}
                                       className={cn(
-                                        "w-12 h-12 rounded-md transition-all duration-200 border-2 relative group",
-                                        "flex items-center justify-center",
+                                        "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-md transition-all duration-200 border-2 relative group",
+                                        "flex items-center justify-center touch-target-sm sm:touch-target",
                                         seat.isAvailable && !isSelected && !isBusinessRow && "bg-background border-border hover:border-primary hover:bg-primary/5",
                                         seat.isAvailable && !isSelected && isBusinessRow && "bg-accent/30 border-accent/50 hover:border-accent hover:bg-accent/40",
                                         isSelected && "bg-primary border-primary shadow-lg scale-105 hover:scale-110",
@@ -347,7 +347,7 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
                                     >
                                       <Armchair 
                                         className={cn(
-                                          "w-6 h-6 transition-colors",
+                                          "w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transition-colors",
                                           isSelected && "text-primary-foreground",
                                           !isSelected && seat.isAvailable && "text-muted-foreground",
                                           !seat.isAvailable && "text-muted-foreground"

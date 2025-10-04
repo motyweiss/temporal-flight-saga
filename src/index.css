@@ -151,6 +151,23 @@ All colors MUST be HSL.
   }
 }
 
+/* Touch-friendly utilities */
+@layer utilities {
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .touch-target-sm {
+    @apply min-h-[32px] min-w-[32px];
+  }
+  
+  /* Word break for long text */
+  .break-word {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
 @layer utilities {
   .gradient-primary {
     background: var(--gradient-primary);

@@ -113,19 +113,19 @@ const PaymentValidation = ({
       </div>
 
       {timeRemaining !== null && <Card className="border-2 border-primary/50 shadow-lg animate-scale-in">
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Clock className="w-6 h-6 text-primary animate-pulse" />
-                  <div>
-                    <div className="font-bold text-lg">Validation Timer</div>
-                    <div className="text-sm text-muted-foreground">Payment must be validated in time</div>
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-primary animate-pulse" />
+                  <div className="text-center sm:text-left">
+                    <div className="font-bold text-sm sm:text-base md:text-lg">Validation Timer</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Payment must be validated in time</div>
                   </div>
                 </div>
-                <div className="text-5xl font-bold text-primary tabular-nums">{timeRemaining}s</div>
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary tabular-nums">{timeRemaining}s</div>
               </div>
-              <Progress value={progress} className="h-2" />
+              <Progress value={progress} className="h-1.5 sm:h-2" />
             </div>
           </CardContent>
         </Card>}
@@ -143,8 +143,8 @@ const PaymentValidation = ({
         <CardContent className="space-y-6">
           <div className="flex justify-center">
             <InputOTP maxLength={PAYMENT_CODE_LENGTH} value={paymentCode} onChange={value => setPaymentCode(value)} disabled={isValidating}>
-              <InputOTPGroup className="gap-3">
-                {[...Array(PAYMENT_CODE_LENGTH)].map((_, index) => <InputOTPSlot key={index} index={index} className={cn("w-16 h-16 text-3xl font-bold border-2 rounded-lg transition-all duration-200", index < paymentCode.length ? "border-primary bg-primary/5 shadow-sm" : "border-input")} />)}
+              <InputOTPGroup className="gap-1.5 sm:gap-2 md:gap-3">
+                {[...Array(PAYMENT_CODE_LENGTH)].map((_, index) => <InputOTPSlot key={index} index={index} className={cn("w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold border-2 rounded-lg transition-all duration-200", index < paymentCode.length ? "border-primary bg-primary/5 shadow-sm" : "border-input")} />)}
               </InputOTPGroup>
             </InputOTP>
           </div>

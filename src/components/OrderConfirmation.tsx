@@ -119,9 +119,9 @@ const OrderConfirmation = ({ orderId, status, flight, seats, onStartOver }: Orde
                   <Users className="w-6 h-6 text-primary" />
                   <h3 className="text-2xl font-bold">Seats</h3>
                 </div>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   {seats.map((seat) => (
-                    <Badge key={seat.id} variant="secondary" className="px-4 py-2 text-lg font-semibold hover:scale-110 transition-transform">
+                    <Badge key={seat.id} variant="secondary" className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base md:text-lg font-semibold hover:scale-110 transition-transform">
                       {seat.id}
                     </Badge>
                   ))}
