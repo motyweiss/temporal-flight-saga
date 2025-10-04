@@ -63,14 +63,9 @@ const FlightSelection = ({ onSelectFlight }: FlightSelectionProps) => {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-magic opacity-0 group-hover:opacity-100 transition-opacity" />
             
             <CardHeader className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Badge variant="secondary" className="font-semibold">
-                  {flight.airline}
-                </Badge>
-                <div className="w-10 h-10 rounded-full bg-gradient-magic flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                  <Plane className="w-5 h-5 text-white" />
-                </div>
-              </div>
+              <Badge variant="secondary" className="font-semibold">
+                {flight.airline}
+              </Badge>
               <CardTitle className="text-2xl font-bold">
                 {flight.flightNumber}
               </CardTitle>
