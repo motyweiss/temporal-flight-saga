@@ -13,7 +13,7 @@ const Header = () => {
               <h1 className="text-2xl font-bold bg-gradient-magic bg-clip-text text-transparent">
                 CalfonAirline
               </h1>
-              <p className="text-xs text-muted-foreground">Temporal Flight Booking</p>
+              <p className="text-xs text-muted-foreground">Professional Flight Booking</p>
             </div>
           </div>
           
