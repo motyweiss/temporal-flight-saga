@@ -16,6 +16,7 @@ export interface Seat {
   type: "economy" | "business" | "first";
   price: number;
   isAvailable: boolean;
+  occupiedBy?: string;
 }
 
 export type OrderStatus = "pending" | "confirmed" | "failed";

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Flight, Seat } from "@/types/booking";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Clock, AlertTriangle, Users, DollarSign, Armchair } from "lucide-react";
@@ -33,13 +34,17 @@ const generateSeats = (): Seat[] => {
       const isBusinessClass = BUSINESS_CLASS_ROWS.includes(row);
       const type = isBusinessClass ? "business" : "economy";
       
+      // Mark seat 3C as occupied by Moty Weiss
+      const isOccupiedByMoty = row === 3 && column === 'C';
+      
       seats.push({
         id: `${row}${column}`,
         row,
         column,
         type,
         price: SEAT_PRICES[type],
-        isAvailable: Math.random() > 0.3, // 70% seats available
+        isAvailable: isOccupiedByMoty ? false : Math.random() > 0.3, // 70% seats available
+        occupiedBy: isOccupiedByMoty ? "Moty Weiss" : undefined,
       });
     }
   }
@@ -282,36 +287,47 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
                           return (
                             <>
                               {colIndex === 3 && <div className="w-8" />}
-                              <button
-                                key={seat.id}
-                                onClick={() => handleSeatClick(seat)}
-                                disabled={!seat.isAvailable}
-                                className={cn(
-                                  "w-12 h-12 rounded-md transition-all duration-200 border-2 relative group",
-                                  "flex items-center justify-center",
-                                  seat.isAvailable && !isSelected && !isBusinessRow && "bg-background border-border hover:border-primary hover:bg-primary/5",
-                                  seat.isAvailable && !isSelected && isBusinessRow && "bg-accent/30 border-accent/50 hover:border-accent hover:bg-accent/40",
-                                  isSelected && "bg-primary border-primary shadow-lg scale-105 hover:scale-110",
-                                  !seat.isAvailable && "bg-muted border-muted cursor-not-allowed opacity-40"
-                                )}
-                                aria-label={`Seat ${seat.id}, ${seat.type} class, ${seat.isAvailable ? 'available' : 'occupied'}`}
-                                aria-pressed={isSelected}
-                              >
-                                <Armchair 
-                                  className={cn(
-                                    "w-6 h-6 transition-colors",
-                                    isSelected && "text-primary-foreground",
-                                    !isSelected && seat.isAvailable && "text-muted-foreground",
-                                    !seat.isAvailable && "text-muted-foreground"
-                                  )} 
-                                />
-                                <span className={cn(
-                                  "absolute -bottom-5 text-[10px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity",
-                                  isSelected && "opacity-100 text-primary"
-                                )}>
-                                  {seat.id}
-                                </span>
-                              </button>
+                              <TooltipProvider key={seat.id}>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      onClick={() => handleSeatClick(seat)}
+                                      disabled={!seat.isAvailable}
+                                      className={cn(
+                                        "w-12 h-12 rounded-md transition-all duration-200 border-2 relative group",
+                                        "flex items-center justify-center",
+                                        seat.isAvailable && !isSelected && !isBusinessRow && "bg-background border-border hover:border-primary hover:bg-primary/5",
+                                        seat.isAvailable && !isSelected && isBusinessRow && "bg-accent/30 border-accent/50 hover:border-accent hover:bg-accent/40",
+                                        isSelected && "bg-primary border-primary shadow-lg scale-105 hover:scale-110",
+                                        !seat.isAvailable && "bg-muted border-muted cursor-not-allowed opacity-40"
+                                      )}
+                                      aria-label={`Seat ${seat.id}, ${seat.type} class, ${seat.isAvailable ? 'available' : 'occupied'}`}
+                                      aria-pressed={isSelected}
+                                    >
+                                      <Armchair 
+                                        className={cn(
+                                          "w-6 h-6 transition-colors",
+                                          isSelected && "text-primary-foreground",
+                                          !isSelected && seat.isAvailable && "text-muted-foreground",
+                                          !seat.isAvailable && "text-muted-foreground"
+                                        )} 
+                                      />
+                                      <span className={cn(
+                                        "absolute -bottom-5 text-[10px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity",
+                                        isSelected && "opacity-100 text-primary"
+                                      )}>
+                                        {seat.id}
+                                      </span>
+                                    </button>
+                                  </TooltipTrigger>
+                                  {!seat.isAvailable && seat.occupiedBy && (
+                                    <TooltipContent>
+                                      <p className="font-semibold">Occupied by:</p>
+                                      <p>{seat.occupiedBy}</p>
+                                    </TooltipContent>
+                                  )}
+                                </Tooltip>
+                              </TooltipProvider>
                             </>
                           );
                         })}
