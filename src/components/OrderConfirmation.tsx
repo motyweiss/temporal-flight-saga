@@ -36,9 +36,9 @@ const OrderConfirmation = ({
               </div>
             </div>
             <div className="space-y-2">
-              <h2 className="text-5xl font-bold text-success">הזמנה אושרה!</h2>
+              <h2 className="text-5xl font-bold text-success">Booking Confirmed!</h2>
               <p className="text-muted-foreground text-xl">
-                הטיסה שלך הוזמנה בהצלחה
+                Your flight has been successfully booked
               </p>
             </div>
           </>
@@ -52,9 +52,9 @@ const OrderConfirmation = ({
               </div>
             </div>
             <div className="space-y-2">
-              <h2 className="text-5xl font-bold text-destructive">הזמנה נכשלה</h2>
+              <h2 className="text-5xl font-bold text-destructive">Booking Failed</h2>
               <p className="text-muted-foreground text-xl">
-                לצערנו, לא הצלחנו להשלים את ההזמנה
+                Unfortunately, we couldn't complete your booking
               </p>
             </div>
           </>
