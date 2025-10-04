@@ -211,68 +211,111 @@ const SeatReservation = ({ flight, onConfirm, onBack }: SeatReservationProps) =>
               Aircraft Seat Map
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             {/* Legend */}
-            <div className="flex flex-wrap gap-4 mb-6 p-4 bg-muted/30 rounded-lg">
+            <div className="flex flex-wrap gap-6 mb-8 p-4 bg-muted/20 rounded-lg border">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded bg-muted border-2" />
-                <span className="text-sm">Available</span>
+                <div className="w-10 h-10 rounded-md bg-background border-2 border-border flex items-center justify-center">
+                  <Armchair className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <span className="text-sm font-medium">Available</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded bg-primary text-primary-foreground border-2 border-primary" />
-                <span className="text-sm">Selected</span>
+                <div className="w-10 h-10 rounded-md bg-primary border-2 border-primary flex items-center justify-center">
+                  <Armchair className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <span className="text-sm font-medium">Your Seat</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded bg-muted-foreground/20 border-2" />
-                <span className="text-sm">Occupied</span>
+                <div className="w-10 h-10 rounded-md bg-muted border-2 border-muted flex items-center justify-center opacity-40">
+                  <Armchair className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <span className="text-sm font-medium">Occupied</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded bg-accent/20 border-2 border-accent" />
-                <span className="text-sm">Business</span>
+                <div className="w-10 h-10 rounded-md bg-accent/30 border-2 border-accent flex items-center justify-center">
+                  <Armchair className="w-5 h-5 text-accent-foreground" />
+                </div>
+                <span className="text-sm font-medium">Business Class</span>
               </div>
             </div>
 
             {/* Seat Grid */}
-            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+              {/* Front of Plane Indicator */}
+              <div className="text-center py-4 border-b-2 border-dashed border-muted-foreground/20">
+                <div className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium">
+                  <div className="w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-muted-foreground/40" />
+                  Front of Aircraft
+                </div>
+              </div>
+
               {Array.from({ length: SEAT_ROWS }, (_, rowIndex) => {
                 const row = rowIndex + 1;
                 const isBusinessRow = BUSINESS_CLASS_ROWS.includes(row);
                 return (
-                  <div key={row} className="flex items-center gap-2">
-                    <div className="w-8 text-center font-semibold text-muted-foreground">
-                      {row}
-                    </div>
-                    <div className="flex gap-1 flex-1">
-                      {SEAT_COLUMNS.map((column, colIndex) => {
-                        const seat = seats.find(
-                          (s) => s.row === row && s.column === column
-                        );
-                        if (!seat) return null;
+                  <div key={row}>
+                    {isBusinessRow && row === BUSINESS_CLASS_ROWS[0] && (
+                      <div className="bg-accent/10 py-2 px-4 rounded-md mb-4 border border-accent/30">
+                        <span className="text-sm font-semibold text-accent-foreground">Business Class</span>
+                      </div>
+                    )}
+                    {!isBusinessRow && row === BUSINESS_CLASS_ROWS[BUSINESS_CLASS_ROWS.length - 1] + 1 && (
+                      <div className="bg-muted/30 py-2 px-4 rounded-md mb-4 border">
+                        <span className="text-sm font-semibold text-muted-foreground">Economy Class</span>
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 text-center font-bold text-sm text-muted-foreground bg-muted/30 py-2 rounded">
+                        {row}
+                      </div>
+                      <div className="flex gap-2 flex-1 justify-center">
+                        {SEAT_COLUMNS.map((column, colIndex) => {
+                          const seat = seats.find(
+                            (s) => s.row === row && s.column === column
+                          );
+                          if (!seat) return null;
 
-                        const isSelected = selectedSeats.some((s) => s.id === seat.id);
-                        
-                        return (
-                          <div key={seat.id} className="flex-1">
-                            <button
-                              onClick={() => handleSeatClick(seat)}
-                              disabled={!seat.isAvailable}
-                              className={cn(
-                                "w-full aspect-square rounded text-xs font-semibold transition-all duration-200 border-2",
-                                "hover:scale-110 active:scale-95",
-                                seat.isAvailable && !isSelected && !isBusinessRow && "bg-muted hover:bg-muted/70 border-muted",
-                                seat.isAvailable && !isSelected && isBusinessRow && "bg-accent/20 hover:bg-accent/30 border-accent",
-                                isSelected && "bg-primary text-primary-foreground border-primary shadow-md scale-110",
-                                !seat.isAvailable && "bg-muted-foreground/20 cursor-not-allowed opacity-50 border-muted-foreground/20"
-                              )}
-                              aria-label={`Seat ${seat.id}, ${seat.type} class, ${seat.isAvailable ? 'available' : 'occupied'}`}
-                              aria-pressed={isSelected}
-                            >
-                              {column}
-                            </button>
-                            {colIndex === 2 && <div className="w-4" />}
-                          </div>
-                        );
-                      })}
+                          const isSelected = selectedSeats.some((s) => s.id === seat.id);
+                          
+                          return (
+                            <>
+                              {colIndex === 3 && <div className="w-8" />}
+                              <button
+                                key={seat.id}
+                                onClick={() => handleSeatClick(seat)}
+                                disabled={!seat.isAvailable}
+                                className={cn(
+                                  "w-12 h-12 rounded-md transition-all duration-200 border-2 relative group",
+                                  "flex items-center justify-center",
+                                  seat.isAvailable && !isSelected && !isBusinessRow && "bg-background border-border hover:border-primary hover:bg-primary/5",
+                                  seat.isAvailable && !isSelected && isBusinessRow && "bg-accent/30 border-accent/50 hover:border-accent hover:bg-accent/40",
+                                  isSelected && "bg-primary border-primary shadow-lg scale-105 hover:scale-110",
+                                  !seat.isAvailable && "bg-muted border-muted cursor-not-allowed opacity-40"
+                                )}
+                                aria-label={`Seat ${seat.id}, ${seat.type} class, ${seat.isAvailable ? 'available' : 'occupied'}`}
+                                aria-pressed={isSelected}
+                              >
+                                <Armchair 
+                                  className={cn(
+                                    "w-6 h-6 transition-colors",
+                                    isSelected && "text-primary-foreground",
+                                    !isSelected && seat.isAvailable && "text-muted-foreground",
+                                    !seat.isAvailable && "text-muted-foreground"
+                                  )} 
+                                />
+                                <span className={cn(
+                                  "absolute -bottom-5 text-[10px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity",
+                                  isSelected && "opacity-100 text-primary"
+                                )}>
+                                  {seat.id}
+                                </span>
+                              </button>
+                            </>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 );
