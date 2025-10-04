@@ -5,6 +5,7 @@ import OrderReview from "@/components/OrderReview";
 import PaymentValidation from "@/components/PaymentValidation";
 import OrderConfirmation from "@/components/OrderConfirmation";
 import StepIndicator from "@/components/StepIndicator";
+import Header from "@/components/Header";
 import { Flight, Seat } from "@/types/booking";
 
 type BookingStep = "flight" | "seats" | "review" | "payment" | "confirmation";
@@ -50,20 +51,13 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-hero">
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-primary bg-clip-text text-transparent">
-            SkyBooker
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Flight Booking System with Temporal Workflows
-          </p>
-        </header>
-
+    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+      <Header />
+      
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         <StepIndicator currentStep={currentStep} />
 
-        <div className="mt-8">
+        <div className="mt-12 animate-slide-up">
           {currentStep === "flight" && (
             <FlightSelection onSelectFlight={handleFlightSelect} />
           )}
