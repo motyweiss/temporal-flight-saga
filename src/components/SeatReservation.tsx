@@ -34,8 +34,8 @@ const generateSeats = (): Seat[] => {
       const isBusinessClass = BUSINESS_CLASS_ROWS.includes(row);
       const type = isBusinessClass ? "business" : "economy";
       
-      // Mark seat 3C as occupied by Moty Weiss
-      const isOccupiedByMoty = row === 3 && column === 'C';
+      // 70% seats available, all occupied seats are reserved by Moty Weiss
+      const isAvailable = Math.random() > 0.3;
       
       seats.push({
         id: `${row}${column}`,
@@ -43,8 +43,8 @@ const generateSeats = (): Seat[] => {
         column,
         type,
         price: SEAT_PRICES[type],
-        isAvailable: isOccupiedByMoty ? false : Math.random() > 0.3, // 70% seats available
-        occupiedBy: isOccupiedByMoty ? "Moty Weiss" : undefined,
+        isAvailable: isAvailable,
+        occupiedBy: isAvailable ? undefined : "Moty Weiss",
       });
     }
   }
