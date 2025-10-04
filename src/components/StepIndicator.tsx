@@ -17,14 +17,14 @@ const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
   const currentIndex = steps.findIndex((step) => step.id === currentStep);
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-2 sm:px-4 mb-4 sm:mb-6 md:mb-8">
+    <div className="w-full max-w-5xl mx-auto px-2 sm:px-4 mb-6 sm:mb-8 md:mb-10">
       <div className="relative">
         {/* Progress Line Background */}
-        <div className="absolute top-4 sm:top-5 md:top-6 left-0 right-0 h-0.5 sm:h-1 bg-muted/30 rounded-full" />
+        <div className="absolute top-5 sm:top-6 md:top-7 left-0 right-0 h-1 sm:h-1.5 bg-muted/30 rounded-full" />
         
         {/* Active Progress Line with Enhanced Gradient */}
         <div 
-          className="absolute top-4 sm:top-5 md:top-6 left-0 h-0.5 sm:h-1 rounded-full transition-all duration-700 ease-out shadow-glow"
+          className="absolute top-5 sm:top-6 md:top-7 left-0 h-1 sm:h-1.5 rounded-full transition-all duration-700 ease-out shadow-glow"
           style={{ 
             width: `${(currentIndex / (steps.length - 1)) * 100}%`,
             background: 'linear-gradient(90deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 50%, hsl(var(--primary)) 100%)',
@@ -43,7 +43,7 @@ const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
                 {/* Step Circle */}
                 <div
                   className={cn(
-                    "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 transition-all duration-500 bg-background z-10 relative",
+                    "w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border-2 transition-all duration-500 bg-background z-10 relative",
                     isCompleted && "bg-success border-success text-white shadow-lg animate-scale-in",
                     isCurrent && "bg-primary border-primary text-white shadow-xl scale-110 animate-pulse-subtle",
                     !isCompleted && !isCurrent && "border-muted text-muted-foreground hover:border-primary/50"
@@ -62,9 +62,8 @@ const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
                 <div className="mt-1.5 sm:mt-2 md:mt-3 text-center">
                   <span
                     className={cn(
-                      "text-[10px] sm:text-xs md:text-sm transition-all duration-300 block px-1",
-                      isCurrent ? "text-foreground font-bold" : "text-muted-foreground font-medium",
-                      "hidden xs:block"
+                      "text-[9px] xs:text-[10px] sm:text-xs md:text-sm transition-all duration-300 block px-1",
+                      isCurrent ? "text-foreground font-bold" : "text-muted-foreground font-medium"
                     )}
                   >
                     {step.label}

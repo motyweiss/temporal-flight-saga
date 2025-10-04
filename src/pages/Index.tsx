@@ -54,10 +54,10 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex flex-col">
       <Header />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl flex-1">
+      <div className="container mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10 max-w-7xl flex-1">
         <StepIndicator currentStep={currentStep} />
 
-        <div className="mt-12 animate-slide-up">
+        <div className="mt-8 sm:mt-10 md:mt-12 animate-slide-up">
           {currentStep === "flight" && (
             <FlightSelection onSelectFlight={handleFlightSelect} />
           )}
