@@ -15,13 +15,6 @@ const Header = () => {
               <p className="text-xs text-muted-foreground">Flight Booking</p>
             </div>
           </div>
-          
-          <div className="flex items-center gap-2 md:gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10 border border-success/20">
-              <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-              <span className="text-xs md:text-sm font-medium text-success">Active</span>
-            </div>
-          </div>
         </div>
       </div>
     </header>
