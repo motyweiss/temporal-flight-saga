@@ -43,7 +43,7 @@ const mockFlights: Flight[] = [
 
 const FlightSelection = ({ onSelectFlight }: FlightSelectionProps) => {
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       <div className="text-center space-y-3 animate-slide-up">
         <h2 className="text-4xl font-bold bg-gradient-magic bg-clip-text text-transparent">
           Choose Your Flight
@@ -53,62 +53,64 @@ const FlightSelection = ({ onSelectFlight }: FlightSelectionProps) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="space-y-4">
         {mockFlights.map((flight, index) => (
           <Card
             key={flight.id}
-            className="group hover:shadow-glow transition-all duration-300 hover:scale-105 cursor-pointer overflow-hidden border-2 hover:border-primary/50 animate-slide-up"
+            className="group hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden border hover:border-primary/50 animate-slide-up"
             style={{ animationDelay: `${index * 100}ms` }}
+            onClick={() => onSelectFlight(flight)}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-magic opacity-0 group-hover:opacity-100 transition-opacity" />
-            
-            <CardHeader className="space-y-4">
-              <Badge variant="secondary" className="font-semibold">
-                {flight.airline}
-              </Badge>
-              <CardTitle className="text-2xl font-bold">
-                {flight.flightNumber}
-              </CardTitle>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <div className="flex-1">
-                    <div className="text-sm text-muted-foreground">Departure</div>
-                    <div className="font-semibold">{flight.departure}</div>
-                    <div className="text-lg font-bold text-primary">{flight.departureTime}</div>
+            <CardContent className="p-6">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                
+                {/* Flight Info */}
+                <div className="flex items-center gap-6 flex-1">
+                  <Badge variant="secondary" className="text-sm font-semibold whitespace-nowrap">
+                    {flight.flightNumber}
+                  </Badge>
+                  
+                  <div className="flex items-center gap-4 flex-1">
+                    {/* Departure */}
+                    <div className="flex-1">
+                      <div className="text-sm text-muted-foreground mb-1">Departure</div>
+                      <div className="font-bold text-lg">{flight.departureTime}</div>
+                      <div className="text-sm text-muted-foreground">{flight.departure}</div>
+                    </div>
+                    
+                    {/* Arrow */}
+                    <div className="flex items-center justify-center px-2">
+                      <ArrowRight className="w-6 h-6 text-primary" />
+                    </div>
+                    
+                    {/* Arrival */}
+                    <div className="flex-1">
+                      <div className="text-sm text-muted-foreground mb-1">Arrival</div>
+                      <div className="font-bold text-lg">{flight.arrivalTime}</div>
+                      <div className="text-sm text-muted-foreground">{flight.arrival}</div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <div className="flex-1">
-                    <div className="text-sm text-muted-foreground">Arrival</div>
-                    <div className="font-semibold">{flight.arrival}</div>
-                    <div className="text-lg font-bold text-primary">{flight.arrivalTime}</div>
+                {/* Price & Action */}
+                <div className="flex items-center gap-6 md:border-l md:pl-6">
+                  <div className="text-center">
+                    <div className="text-sm text-muted-foreground mb-1">Price</div>
+                    <div className="text-3xl font-bold text-primary">
+                      ${flight.price}
+                    </div>
                   </div>
+                  
+                  <Button
+                    onClick={() => onSelectFlight(flight)}
+                    className="gradient-primary shadow-md hover:shadow-glow whitespace-nowrap"
+                    size="lg"
+                    aria-label={`Select flight ${flight.flightNumber}`}
+                  >
+                    Select Flight
+                    <Plane className="ml-2 h-5 w-5" />
+                  </Button>
                 </div>
-              </div>
-
-              <div className="pt-4 border-t space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Price</span>
-                  <span className="text-3xl font-bold bg-gradient-magic bg-clip-text text-transparent">
-                    ${flight.price}
-                  </span>
-                </div>
-
-                <Button
-                  onClick={() => onSelectFlight(flight)}
-                  className="w-full gradient-primary shadow-md hover:shadow-glow group-hover:scale-105 transition-all"
-                  size="lg"
-                  aria-label={`Select flight ${flight.flightNumber}`}
-                >
-                  Select Flight
-                  <Plane className="ml-2 h-5 w-5" />
-                </Button>
               </div>
             </CardContent>
           </Card>
