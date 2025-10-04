@@ -51,10 +51,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex flex-col">
       <Header />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 py-8 max-w-7xl flex-1">
         <StepIndicator currentStep={currentStep} />
 
         <div className="mt-12 animate-slide-up">
@@ -97,6 +97,14 @@ const Index = () => {
           )}
         </div>
       </div>
+
+      <footer className="border-t bg-background/50 backdrop-blur-sm py-4 mt-12">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-xs text-muted-foreground">
+            Designed with love by MotyAI
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
