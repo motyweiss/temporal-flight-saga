@@ -17,6 +17,7 @@ interface PaymentValidationProps {
 const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => {
   const [paymentCode, setPaymentCode] = useState("");
   const [isValidating, setIsValidating] = useState(false);
+  const [validationStatus, setValidationStatus] = useState<"idle" | "validating" | "success" | "error">("idle");
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [validationHistory, setValidationHistory] = useState<{ attempt: number; result: "success" | "failed"; timestamp: Date }[]>([]);
@@ -33,17 +34,21 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
 
   const handleValidationFailure = () => {
     setIsValidating(false);
+    setValidationStatus("error");
     setTimeRemaining(null);
     const newAttempt = { attempt: retryCount + 1, result: "failed" as const, timestamp: new Date() };
     setValidationHistory([...validationHistory, newAttempt]);
 
     if (retryCount >= MAX_PAYMENT_RETRIES - 1) {
       toast({ title: "Payment Failed", description: `Maximum attempts (${MAX_PAYMENT_RETRIES}) reached. Order cancelled.`, variant: "destructive" });
-      setTimeout(() => onFailure(), 2000);
+      setTimeout(() => onFailure(), 3000);
     } else {
       setRetryCount(retryCount + 1);
       toast({ title: "Validation Failed", description: `Attempt ${retryCount + 1} of ${MAX_PAYMENT_RETRIES} failed. Try again.`, variant: "destructive" });
-      setPaymentCode("");
+      setTimeout(() => {
+        setPaymentCode("");
+        setValidationStatus("idle");
+      }, 2000);
     }
   };
 
@@ -53,16 +58,24 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
       return;
     }
     setIsValidating(true);
+    setValidationStatus("validating");
     setTimeRemaining(PAYMENT_VALIDATION_TIMEOUT);
     const isValid = await validatePaymentCode();
     if (timeRemaining !== null && timeRemaining > 0) {
       if (isValid) {
+        setValidationStatus("success");
         setValidationHistory([...validationHistory, { attempt: retryCount + 1, result: "success" as const, timestamp: new Date() }]);
         toast({ title: "Payment Approved!", description: "Your payment has been validated successfully" });
-        setTimeout(() => onSuccess(generateOrderId()), 1500);
+        setTimeout(() => onSuccess(generateOrderId()), 2000);
       } else {
         handleValidationFailure();
       }
+    } else {
+      // Time expired during validation
+      setValidationStatus("error");
+      setIsValidating(false);
+      toast({ title: "Time Expired", description: "Validation time has expired. Please try again.", variant: "destructive" });
+      setTimeout(() => onFailure(), 2000);
     }
   };
 
@@ -142,9 +155,76 @@ const PaymentValidation = ({ onSuccess, onFailure }: PaymentValidationProps) => 
             </div>
           </div>
 
-          {retryCount > 0 && <Card className="bg-destructive/5 border-destructive/20"><CardContent className="p-4"><div className="flex items-start gap-2"><AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" /><div className="text-sm space-y-1"><p className="font-semibold text-destructive">Attempt {retryCount} of {MAX_PAYMENT_RETRIES}</p><p className="text-muted-foreground">{MAX_PAYMENT_RETRIES - retryCount} attempts remaining before order cancellation</p></div></div></CardContent></Card>}
+          {retryCount > 0 && validationStatus !== "success" && (
+            <Card className="bg-destructive/5 border-destructive/20">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+                  <div className="text-sm space-y-1">
+                    <p className="font-semibold text-destructive">Attempt {retryCount} of {MAX_PAYMENT_RETRIES}</p>
+                    <p className="text-muted-foreground">{MAX_PAYMENT_RETRIES - retryCount} attempts remaining before order cancellation</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-          <Button size="lg" className="w-full gradient-primary shadow-md hover:shadow-glow transition-all text-lg h-14" onClick={handleSubmit} disabled={paymentCode.length !== PAYMENT_CODE_LENGTH || isValidating}>{isValidating ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Validating Payment...</> : <>Validate Payment<ShieldCheck className="ml-2 h-5 w-5" /></>}</Button>
+          {/* Validation Status Messages */}
+          {validationStatus === "success" && (
+            <Card className="bg-success/10 border-success/30 animate-scale-in">
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center gap-4 text-center">
+                  <div className="w-16 h-16 rounded-full bg-success flex items-center justify-center">
+                    <ShieldCheck className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-success mb-2">Payment Validated!</h3>
+                    <p className="text-muted-foreground">Your payment has been successfully verified. Redirecting to confirmation...</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {validationStatus === "error" && retryCount >= MAX_PAYMENT_RETRIES - 1 && (
+            <Card className="bg-destructive/10 border-destructive/30 animate-scale-in">
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center gap-4 text-center">
+                  <div className="w-16 h-16 rounded-full bg-destructive flex items-center justify-center">
+                    <AlertCircle className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-destructive mb-2">Payment Failed</h3>
+                    <p className="text-muted-foreground">Maximum validation attempts reached. Your order has been cancelled.</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          <Button 
+            size="lg" 
+            className="w-full gradient-primary shadow-md hover:shadow-glow transition-all text-lg h-14" 
+            onClick={handleSubmit} 
+            disabled={paymentCode.length !== PAYMENT_CODE_LENGTH || isValidating || validationStatus === "success" || (validationStatus === "error" && retryCount >= MAX_PAYMENT_RETRIES - 1)}
+          >
+            {validationStatus === "validating" ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Validating Payment...
+              </>
+            ) : validationStatus === "success" ? (
+              <>
+                <ShieldCheck className="w-5 h-5 mr-2" />
+                Payment Validated!
+              </>
+            ) : (
+              <>
+                Validate Payment
+                <ShieldCheck className="ml-2 h-5 w-5" />
+              </>
+            )}
+          </Button>
         </CardContent>
       </Card>
     </div>
